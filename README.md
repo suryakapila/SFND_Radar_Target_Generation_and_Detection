@@ -71,20 +71,26 @@ td=zeros(1,length(t)); % time delay
 ```
 
 #### 4. Signal generation and Moving Target simulation
+* Signal generation and Moving Target simulation
+* Running the radar scenario over the time
 ```
 for i=1:length(t)         
-       
-    % For each time stamp update the Range of the Target for constant velocity.     
-    r_t(i) = Range_of_target + (Velocity_of_target*t(i)); % range_covered
-    td(i) = (2*r_t(i)) / speed_of_light; % time delay
     
-    % For each time sample we need update the transmitted and received signal.
-    Tx(i) = cos( 2*pi*( fc*(t(i)        ) + ( 0.5 * slope * t(i)^2)         ) );
-    Rx(i) = cos( 2*pi*( fc*(t(i)-td(i)  ) + ( 0.5 * slope * (t(i)-td(i))^2) ) );
+    %For each time stamp update the Range of the Target for constant velocity.
     
-    % Now by mixing the Transmit and Receive generate the beat signal
-    % This is done by element wise matrix multiplication of Transmit and Receiver Signal
-    Mix(i) = Tx(i).*Rx(i); 
+    r_t(i) = R + (v*t(i)); % Range at time instance i = initial range + velocity *time
+    td(i)  = 2*r_t(i)/c;     % trip time for the signal in radar signal processing
+   
+    %For each time sample we need update the transmitted and
+    %received signal. 
+    Tx(i)   = cos(2*pi*(fc*t(i)+(0.5*slope*t(i)^2)));
+    Rx (i)  = cos(2*pi*((fc*(t(i)-td(i)))+(0.5*slope*(t(i)-td(i))^2)));
+    
+    %Now by mixing the Transmit and Receive generate the beat signal
+    %This is done by element wise matrix multiplication of Transmit and
+    %Receiver Signal
+    Mix(i) = Tx(i).*Rx(i);
+    
 end
 ```
 
@@ -95,12 +101,9 @@ end
 ```
 Mix = reshape(Mix,[Nr,Nd]);
 ```
-* run the FFT on the beat signal along the range bins dimension (Nr) and
+* run the FFT on the beat signal along the range bins dimension (Nr) and normalise
 ```
 sig_fft1 = fft(Mix,Nr);  
-```
-* normalize.
-```
 sig_fft1 = sig_fft1./Nr;
 ```
 * Take the absolute value of FFT output
@@ -110,16 +113,20 @@ sig_fft1 = abs(sig_fft1);
 * Output of FFT is double sided signal, but we are interested in only one side of the spectrum.
 * Hence we throw out half of the samples.
 ```
-single_side_sig_fft1 = sig_fft1(1:Nr/2);
+single_sig_y_fft1 = sig_fft1(1:Nr/2);
 ```
-* Plotting the range, plot FFT output 
+* Plotting the range
 ```
 figure ('Name','Range from First FFT')
-plot(single_side_sig_fft1); 
+subplot(2,1,1)
+```
+* plot FFT output
+```
+plot(single_sig_y_fft1);
 axis ([0 200 0 1]);
 ```
 * Simulation Result
-<img src="results/Fig1_Range_from_First_FFT.bmp" width="700" />
+<img src="results/Range_from_First_FFT.bmp" width="700" />
 
 #### 6. Range Doppler Response
 * The 2D FFT implementation is already provided here. 
