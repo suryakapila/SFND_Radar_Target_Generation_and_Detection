@@ -24,8 +24,8 @@ speed_of_light = 3e8;
 * define the target's initial position and velocity. 
 * Note : Velocity remains contant
 ```
-Range_of_target = 110; % Target Initial Range
-Velocity_of_target  = -20; % Target Velocity
+R = 110; % Target Initial Range
+v = -20; % Target Velocity
 ```
 
 #### 3. FMCW Waveform Generation
@@ -34,12 +34,16 @@ Velocity_of_target  = -20; % Target Velocity
 
 * Operating carrier frequency of Radar 
 ```
-fc= 77e9;             %carrier freq
-sweep_time_factor = 5.5;
+B = c/2*delta_r ;            %Bandwidth of the sweep
 
-B      = speed_of_light / (2 * Range_Resolution_of_Radar); % Bandwidth of the FMCW, Bsweep 
-Tchirp = (sweep_time_factor*2*Max_Range_of_Radar)/speed_of_light; % Chirp Time of the FMCW
-slope  = B/Tchirp; % Slope of the FMCW
+Tchirp =5.5*2*range_max/c  ; %Chirp Time
+
+slope = B/Tchirp  ;          %slope of the FMCW chirp
+```
+
+* Operating carrier frequency of Radar 
+```
+fc= 77e9;             %carrier freq
 ```                                                          
 * The number of chirps in one sequence. 
 * Its ideal to have `2^value` for the ease of running the FFT for Doppler Estimation. 
