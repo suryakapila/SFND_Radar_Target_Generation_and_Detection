@@ -152,8 +152,7 @@ RDM = 10*log10(RDM) ;
 ```
 doppler_axis = linspace(-100,100,Nd);
 range_axis = linspace(-200,200,Nr/2)*((Nr/2)/400);
-figure ('Name','Range and Speed From FFT2')
-surf(doppler_axis,range_axis,RDM);
+figure,surf(doppler_axis,range_axis,RDM);
 ```
 * Simulation Result
 <img src="results/Fig2_Range_and_Speed_From_FFT2.bmp" width="700" />
