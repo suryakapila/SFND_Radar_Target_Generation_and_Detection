@@ -228,4 +228,4 @@ surf(doppler_axis,range_axis,RDM);
 colorbar;
 ```
 * Simulation Result
-<img src="results/Fig3_CA-CFAR_Filtered_RDM.bmp" width="700" />
+<img src="results/2D_CFAR.png" width="700" />
