@@ -155,7 +155,7 @@ range_axis = linspace(-200,200,Nr/2)*((Nr/2)/400);
 figure,surf(doppler_axis,range_axis,RDM);
 ```
 * Simulation Result
-<img src="results/Fig2_Range_and_Speed_From_FFT2.bmp" width="700" />
+<img src="results/2D_FFT.png" width="700" />
 
 #### 7. CFAR implementation
 * Slide Window through the complete Range Doppler Map
