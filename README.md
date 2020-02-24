@@ -21,7 +21,7 @@ speed_of_light = 3e8;
 
 #### 2. User Defined Range and Velocity of target
 
-* define the target's initial position and velocity. 
+* define the target's initial  position and velocity. 
 * Note : Velocity remains contant
 ```
 R = 110; % Target Initial Range
