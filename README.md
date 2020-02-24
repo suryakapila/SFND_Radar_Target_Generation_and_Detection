@@ -184,6 +184,8 @@ offset = 1.4;
 * Use `RDM[x,y]` as the matrix from the output of 2D FFT for implementing CFAR
 ```   
 RDM = RDM/max(max(RDM));
+% CUT starts after training and Guard cells so starting the loop for sliding
+% CUT from T+G+1
 
 for i = Tr+Gr+1:(Nr/2)-(Gr+Tr)
     for j = Td+Gd+1:Nd-(Gd+Td)
@@ -191,25 +193,29 @@ for i = Tr+Gr+1:(Nr/2)-(Gr+Tr)
        % Create a vector to store noise_level for each iteration on training cells
         noise_level = zeros(1,1);
         
-        % Calculate noise SUM in the area around CUT
-        for p = i-(Tr+Gr) : i+(Tr+Gr)
-            for q = j-(Td+Gd) : j+(Td+Gd)
-                if (abs(i-p) > Gr || abs(j-q) > Gd)
-                    noise_level = noise_level + db2pow(RDM(p,q));
+        % Calculate sum of the noise signal level within all the training cells
+        %calculate sum of the signal level within all the training cells 
+        for x = i-(Tr+Gr): i+(Tr+Gr)
+            for y= j-(Td+Gd): j+(Td+Gd)
+                if (abs(x-i)>Gr || abs(y-j)> Gd)
+                    noise_level = noise_level + db2pow(RDM(x,y));
                 end
             end
         end
         
-        % Calculate threshould from noise average then add the offset
-        threshold = pow2db(noise_level/(2*(Td+Gd+1)*2*(Tr+Gr+1)-(Gr*Gd)-1));
-        threshold = threshold + offset;
-        CUT = RDM(i,j);
+       %Average the summed values for all of the training cells used.
+noise_level = noise_level/(2*(Td+Gd+1)*2*(Tr+Gr+1)-(Gr*Gd)-1);        
+threshold = pow2db(noise_level);
+threshold = threshold + offset;
+
+CUT = RDM(i,j);
+
+if (CUT > threshold)
+    RDM(i,j) = 1;
+else
+    RDM(i,j) = 0;
+end    
         
-        if (CUT < threshold)
-            RDM(i,j) = 0;
-        else
-            RDM(i,j) = 1;
-        end
     end
 end
 ```
